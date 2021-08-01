@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require("path");
 const mongoose = require('mongoose');
 const node_cron = require('node-cron');
-mongo_uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/x';
+mongo_uri = process.env.QOVERY_DATABASE_MY_MONGO_CONNECTION_URI  || 'mongodb://127.0.0.1:27017/x';
 mongoose.connect(mongo_uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -102,6 +102,18 @@ server.post("/is_registered", async (req, res) => {
     Botdata.find({ 'bot_url': req.body.bot_url }).then((result) => {
         console.log('find result-', result.length);
         result.length ?  res.send(true): res.send(false);
+    }
+    ).catch(e => {
+        console.log('found error', e);
+    }
+    );
+})
+
+server.get("/all_registered", async (req, res) => {
+    console.log("all_registered");
+    Botdata.find().then((result) => {
+        console.log('found result-', result);
+        res.send(result);
     }
     ).catch(e => {
         console.log('find error', e);
