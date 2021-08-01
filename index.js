@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require("path");
 const mongoose = require('mongoose');
 const node_cron = require('node-cron');
-mongo_uri = process.env.QOVERY_DATABASE_MY_MONGO_CONNECTION_URI  || 'mongodb://127.0.0.1:27017/x';
+mongo_uri = process.env.MONGO_URI  || 'mongodb://127.0.0.1:27017/x';
 mongoose.connect(mongo_uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -122,3 +122,4 @@ server.get("/all_registered", async (req, res) => {
 })
 
 process.on('uncaughtException', err => console.log(err));
+
