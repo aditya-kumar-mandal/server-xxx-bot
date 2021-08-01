@@ -1,6 +1,3 @@
-s ="hi. dick.54 xxx, chutiye, lund."
-
-let re = new RegExp('/[^A-Za-z-]/g');
-word_array = s.replace(re, "  ").replace(/\s+/g, " ").split(" ")
-
+s ="hi. dick.54 xxx, FUCK ,chutiye, lund."
+word_array = s.replace(/[^a-z]/gmi, " ").replace(/\s+/g, " ").split(" ")
 console.log(word_array);

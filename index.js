@@ -38,8 +38,7 @@ server.get("/allabuse", async (req, res) => {
 
 
 server.get("/isabuse/:id", async (req, res) => {
-    let re = new RegExp('[^A-Za-z0-9-]/g');
-    word_array = req.params.id.replace(re,"  ").replace(/\s+/g, " ").split(" ")
+    word_array = req.params.id.replace(/[^a-z]/gmi, " ").replace(/\s+/g, " ").split(" ")
     abuse_array = abuse.words.filter(e => word_array.indexOf(e) !== -1)
     if (abuse_array.length > 0) {
         res.status(201).send({ "isabuse": true, "original_sentence": word_array, "words_found": abuse_array});
