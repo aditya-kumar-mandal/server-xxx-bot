@@ -1,6 +1,6 @@
 const express = require("express");
 const server = new express();
-const port = process.env.PORT || 3333;
+const port = process.env.PORT || 5000;
 const fs = require('fs');
 const path = require("path");
 const mongoose = require('mongoose');
@@ -35,7 +35,7 @@ node_cron.schedule('0 0 * * *',  ()=> {
         } else {
             botdata.forEach(currentItem => {
                 axios.get(currentItem.bot_url + '/resetdailycount').then(function (response) {
-                    console.log(response.data);
+                 //   console.log(response.data);
                 }
                 ).catch(function (error) {
                     console.log(error);
@@ -87,7 +87,7 @@ server.get("/isabuse/:id", async (req, res) => {
 
 server.post("/register_new_bot", async (req, res) => {
     console.log("register-new-bot");
-    console.log(req.body);
+  //  console.log(req.body);
     const mongo = new Botdata(req.body)
     mongo.save().then(() => {
         res.status(201).send("OK");
@@ -100,7 +100,7 @@ server.post("/register_new_bot", async (req, res) => {
 server.post("/is_registered", async (req, res) => {
     console.log("is_registered");
     Botdata.find({ 'bot_url': req.body.bot_url }).then((result) => {
-        console.log('find result-', result.length);
+       // console.log('find result-', result.length);
         result.length ?  res.send(true): res.send(false);
     }
     ).catch(e => {
@@ -112,7 +112,7 @@ server.post("/is_registered", async (req, res) => {
 server.get("/all_registered", async (req, res) => {
     console.log("all_registered");
     Botdata.find().then((result) => {
-        console.log('found result-', result);
+      //  console.log('found result-', result);
         res.send(result);
     }
     ).catch(e => {
@@ -122,4 +122,3 @@ server.get("/all_registered", async (req, res) => {
 })
 
 process.on('uncaughtException', err => console.log(err));
-
