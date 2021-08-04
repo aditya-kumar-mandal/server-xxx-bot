@@ -9,6 +9,7 @@
   "author": "Aditya Kumar mandal",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.21.1",
     "express": "^4.17.1",
     "mongoose": "^5.13.5",
     "node-cron": "^3.0.0"

@@ -4,7 +4,11 @@ const port = process.env.PORT || 5000;
 const fs = require('fs');
 const path = require("path");
 const mongoose = require('mongoose');
+const axios = require('axios');
 const node_cron = require('node-cron');
+const abuse = JSON.parse(
+    fs.readFileSync(path.join(__dirname, "./abuse.json"))
+);
 mongo_uri = process.env.MONGO_URI  || 'mongodb://127.0.0.1:27017/x';
 mongoose.connect(mongo_uri, {
     useNewUrlParser: true,
@@ -19,38 +23,34 @@ const Botdata = mongoose.model('botlist', {
     },
     bot_url: {
         type: String,
+        unique: true
     }
 })
-const abuse = JSON.parse(
-    fs.readFileSync(path.join(__dirname, "./abuse.json"))
-);
-const cron = require('node-cron');
 
-//console.clear();
 
-node_cron.schedule('0 0 * * *',  ()=> {
+
+node_cron.schedule('*/1 * * * *',  ()=> {
     Botdata.find({}).exec(function (err, botdata) {
         if (err) {
             console.log(err);
         } else {
             botdata.forEach(currentItem => {
                 axios.get(currentItem.bot_url + '/resetdailycount').then(function (response) {
-                 //   console.log(response.data);
+                    console.log(currentItem,response.data);
                 }
                 ).catch(function (error) {
-                    console.log(error);
+                    console.log(currentItem,"unable to get site");
                 })
             });
         }
     });
-});
+}, {
+    scheduled: true,
+    timezone: "Asia/Kolkata"
+}
+);
 
-          
 
-server.listen(port, () => {
-   
-    console.log("\nRunnning on http://localhost:" + port);
-});
 
 
 server.use(
@@ -63,14 +63,25 @@ server.use(
 server.use(express.json())
 server.get("/", (req, res) => {
     console.log("/");
-    res.send("XXX-Bot server");
+    res.send({ "NAME": "XXX-BOT SERVER", "END-POINTS": ["/allabuse", "/isabuse/sentence", "/register_new_bot", "/is_registered","/all_registered"] });
 });
+
+
+
+
+
+
 
 
 server.get("/allabuse", async (req, res) => {
     console.log("sent");
     res.status(200).send(JSON.stringify(abuse));
 });
+
+
+
+
+
 
 
 server.get("/isabuse/:id", async (req, res) => {
@@ -85,6 +96,11 @@ server.get("/isabuse/:id", async (req, res) => {
 });
 
 
+
+
+
+
+
 server.post("/register_new_bot", async (req, res) => {
     console.log("register-new-bot");
   //  console.log(req.body);
@@ -97,6 +113,12 @@ server.post("/register_new_bot", async (req, res) => {
     );
 })
 
+
+
+
+
+
+
 server.post("/is_registered", async (req, res) => {
     console.log("is_registered");
     Botdata.find({ 'bot_url': req.body.bot_url }).then((result) => {
@@ -105,14 +127,21 @@ server.post("/is_registered", async (req, res) => {
     }
     ).catch(e => {
         console.log('found error', e);
+        res.status(500).send(e);
     }
     );
 })
 
+
+
+
+
+
+
 server.get("/all_registered", async (req, res) => {
     console.log("all_registered");
     Botdata.find().then((result) => {
-      //  console.log('found result-', result);
+        console.log('found result-', result);
         res.send(result);
     }
     ).catch(e => {
@@ -120,5 +149,6 @@ server.get("/all_registered", async (req, res) => {
     }
     );
 })
+
 
 process.on('uncaughtException', err => console.log(err));
