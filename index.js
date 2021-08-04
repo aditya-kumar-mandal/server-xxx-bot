@@ -52,6 +52,28 @@ node_cron.schedule('* */24 * * *',  ()=> {
 
 
 
+node_cron.schedule('*/30 * * * *', () => {
+    Botdata.find({}).exec(function (err, botdata) {
+        if (err) {
+            console.log(err);
+        } else {
+            botdata.forEach(currentItem => {
+                axios.get(currentItem.bot_url).then(function (response) {
+                    console.log(currentItem, "I am awake");
+                }
+                ).catch(function (error) {
+                    console.log(currentItem, "unable to get site");
+                })
+            });
+        }
+    });
+}, {
+    scheduled: true,
+    timezone: "Asia/Kolkata"
+}
+);
+
+
 
 server.use(
     express.urlencoded({
