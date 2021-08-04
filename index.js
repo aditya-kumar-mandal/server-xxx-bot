@@ -29,7 +29,7 @@ const Botdata = mongoose.model('botlist', {
 
 
 
-node_cron.schedule('*/1 * * * *',  ()=> {
+node_cron.schedule('* */24 * * *',  ()=> {
     Botdata.find({}).exec(function (err, botdata) {
         if (err) {
             console.log(err);
