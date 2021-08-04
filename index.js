@@ -12,7 +12,8 @@ const abuse = JSON.parse(
 mongo_uri = process.env.MONGO_URI  || 'mongodb://127.0.0.1:27017/x';
 mongoose.connect(mongo_uri, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useCreateIndex: true
 })
 const Botdata = mongoose.model('botlist', {
     ownernumber: {
@@ -47,8 +48,7 @@ node_cron.schedule('* */24 * * *',  ()=> {
 }, {
     scheduled: true,
     timezone: "Asia/Kolkata"
-}
-);
+});
 
 
 
@@ -90,6 +90,12 @@ server.get("/", (req, res) => {
 
 
 
+
+
+server.listen(port, () => {
+    console.clear();
+    console.log("\nRunnning on http://localhost:" + port);
+});
 
 
 
